@@ -14,6 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -205,7 +206,18 @@ public class DrawTextPanel extends JPanel  {
 	 */
 	private void doMenuCommand(String command) {
 		if (command.equals("Save...")) { // save all the string info to a file
-			JOptionPane.showMessageDialog(this, "Sorry, the Save command is not implemented.");
+			File imageSaveSetting = fileChooser.getOutputFile(this, "Select Image File Name", "textimage.txt");
+			try {
+				PrintWriter writer = new PrintWriter(imageSaveSetting);
+				writer.write("red:" + String.valueOf(canvas.getBackground().getRed()) + "\n");
+				writer.write("green:" + String.valueOf(canvas.getBackground().getGreen())+ "\n");
+				writer.write("blue:" + String.valueOf(canvas.getBackground().getBlue()) + "\n");
+				writer.flush();  
+			    writer.close();
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(this, "Sorry, the file has problem.");
+			} 
+			JOptionPane.showMessageDialog(this, "Save completed.");
 		}
 		else if (command.equals("Open...")) { // read a previously saved file, and reconstruct the list of strings
 			JOptionPane.showMessageDialog(this, "Sorry, the Open command is not implemented.");
