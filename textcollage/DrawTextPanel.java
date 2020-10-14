@@ -214,7 +214,8 @@ public class DrawTextPanel extends JPanel  {
 				if (theString != null)
 					for (DrawTextItem item: theString)
 						writer.write(item.getString() + ":" + String.valueOf(item.getTextColor().getRed()) + ":"
-								+ String.valueOf(item.getTextColor().getGreen()) +":" + String.valueOf(item.getTextColor().getBlue()) + "\n");
+								+ String.valueOf(item.getTextColor().getGreen()) +":" + String.valueOf(item.getTextColor().getBlue()) + ":" 
+								+ String.valueOf(item.getX()) + ":" + String.valueOf(item.getY()) + "\n");
 				writer.flush();  
 			    writer.close();
 			} catch (Exception e) {
@@ -223,6 +224,7 @@ public class DrawTextPanel extends JPanel  {
 			JOptionPane.showMessageDialog(this, "Save completed.");
 		}
 		else if (command.equals("Open...")) { // read a previously saved file, and reconstruct the list of strings
+			File imageSaveSetting = fileChooser.getOutputFile(this, "Select Image File Name", "textimage.txt");
 			JOptionPane.showMessageDialog(this, "Sorry, the Open command is not implemented.");
 			canvas.repaint(); // (you'll need this to make the new list of strings take effect)
 		}
