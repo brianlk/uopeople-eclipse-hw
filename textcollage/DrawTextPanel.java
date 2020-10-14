@@ -42,7 +42,7 @@ public class DrawTextPanel extends JPanel  {
 	// variable should be replaced by a variable of type
 	// ArrayList<DrawStringItem> that can store multiple items.
 	
-	private DrawTextItem theString;  // change to an ArrayList<DrawTextItem> !
+	private ArrayList<DrawTextItem> theString;  // change to an ArrayList<DrawTextItem> !
 
 	
 	private Color currentTextColor = Color.BLACK;  // Color applied to new strings.
@@ -71,7 +71,8 @@ public class DrawTextPanel extends JPanel  {
 			((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
 					RenderingHints.VALUE_ANTIALIAS_ON);
 			if (theString != null)
-				theString.draw(g);
+				for (DrawTextItem item: theString)
+					item.draw(g);
 		}
 	}
 	
@@ -94,6 +95,7 @@ public class DrawTextPanel extends JPanel  {
 	 * area at the point where the user clicked.
 	 */
 	public DrawTextPanel() {
+		theString = new ArrayList<DrawTextItem>();
 		fileChooser = new SimpleFileChooser();
 		undoMenuItem = new JMenuItem("Remove Item");
 		undoMenuItem.setEnabled(false);
@@ -139,7 +141,7 @@ public class DrawTextPanel extends JPanel  {
 //		s.setBackground(Color.BLUE);  // Default is null, meaning don't draw a background area.
 //		s.setBackgroundTransparency(0.7);  // Default is 0, meaning background is not transparent.
 		
-		theString = s;  // Set this string as the ONLY string to be drawn on the canvas!
+		theString.add(s);  // Set this string as the ONLY string to be drawn on the canvas!
 		undoMenuItem.setEnabled(true);
 		canvas.repaint();
 	}
@@ -210,13 +212,14 @@ public class DrawTextPanel extends JPanel  {
 			canvas.repaint(); // (you'll need this to make the new list of strings take effect)
 		}
 		else if (command.equals("Clear")) {  // remove all strings
-			theString = null;   // Remove the ONLY string from the canvas.
+			theString.clear();   // Remove the ONLY string from the canvas.
 			undoMenuItem.setEnabled(false);
 			canvas.repaint();
 		}
 		else if (command.equals("Remove Item")) { // remove the most recently added string
-			theString = null;   // Remove the ONLY string from the canvas.
-			undoMenuItem.setEnabled(false);
+			theString.remove(theString.size() - 1);   // Remove the ONLY string from the canvas.
+			if (theString.size() == 0)
+				undoMenuItem.setEnabled(false);
 			canvas.repaint();
 		}
 		else if (command.equals("Set Text Color...")) {
