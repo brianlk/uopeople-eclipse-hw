@@ -209,9 +209,12 @@ public class DrawTextPanel extends JPanel  {
 			File imageSaveSetting = fileChooser.getOutputFile(this, "Select Image File Name", "textimage.txt");
 			try {
 				PrintWriter writer = new PrintWriter(imageSaveSetting);
-				writer.write("red:" + String.valueOf(canvas.getBackground().getRed()) + "\n");
-				writer.write("green:" + String.valueOf(canvas.getBackground().getGreen())+ "\n");
-				writer.write("blue:" + String.valueOf(canvas.getBackground().getBlue()) + "\n");
+				writer.write("background:" + String.valueOf(canvas.getBackground().getRed()) + ":" + String.valueOf(canvas.getBackground().getGreen()) 
+					+ ":" + String.valueOf(canvas.getBackground().getBlue()) + "\n");
+				if (theString != null)
+					for (DrawTextItem item: theString)
+						writer.write(item.getString() + ":" + String.valueOf(item.getTextColor().getRed()) + ":"
+								+ String.valueOf(item.getTextColor().getGreen()) +":" + String.valueOf(item.getTextColor().getBlue()) + "\n");
 				writer.flush();  
 			    writer.close();
 			} catch (Exception e) {
