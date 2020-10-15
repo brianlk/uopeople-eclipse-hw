@@ -29,6 +29,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import java.awt.event.MouseMotionAdapter;
 
 /**
  * A panel that contains a large drawing area where strings
@@ -46,6 +47,7 @@ public class DrawTextPanel extends JPanel  {
 	// ArrayList<DrawStringItem> that can store multiple items.
 	
 	private ArrayList<DrawTextItem> theString;  // change to an ArrayList<DrawTextItem> !
+	private DrawTextItem currentItem;
 
 	
 	private Color currentTextColor = Color.BLACK;  // Color applied to new strings.
@@ -117,7 +119,20 @@ public class DrawTextPanel extends JPanel  {
 			public void mousePressed(MouseEvent e) {
 				doMousePress( e );
 			}
+			
+		    public void mouseReleased(MouseEvent e) {
+//		    	System.out.println("x:" +e.getX() + "y:" + e.getY());
+		    }
 		} );
+		canvas.addMouseMotionListener(new MyMouseMotionListener(){
+			public void mouseDragged(MouseEvent e) {
+//				System.out.println("x:" +currentItem.getX() + "y:" + currentItem.getY());
+				currentItem.setX(e.getX());
+				currentItem.setY(e.getY());
+		        canvas.repaint();
+		      }
+			
+		});
 	}
 		
 	/**
@@ -136,15 +151,15 @@ public class DrawTextPanel extends JPanel  {
 		s.setTextColor(currentTextColor);  // Default is null, meaning default color of the canvas (black).
 		
 //   SOME OTHER OPTIONS THAT CAN BE APPLIED TO TEXT ITEMS:
-//		s.setFont( new Font( "Serif", Font.ITALIC + Font.BOLD, 12 ));  // Default is null, meaning font of canvas.
+		s.setFont( new Font( "Serif", Font.ITALIC + Font.BOLD, 18 ));  // Default is null, meaning font of canvas.
 //		s.setMagnification(3);  // Default is 1, meaning no magnification.
 //		s.setBorder(true);  // Default is false, meaning don't draw a border.
 //		s.setRotationAngle(25);  // Default is 0, meaning no rotation.
 //		s.setTextTransparency(0.3); // Default is 0, meaning text is not at all transparent.
-//		s.setBackground(Color.BLUE);  // Default is null, meaning don't draw a background area.
+		s.setBackground(Color.BLUE);  // Default is null, meaning don't draw a background area.
 //		s.setBackgroundTransparency(0.7);  // Default is 0, meaning background is not transparent.
-		
 		theString.add(s);  // Set this string as the ONLY string to be drawn on the canvas!
+		currentItem = theString.get(theString.size() - 1);
 		undoMenuItem.setEnabled(true);
 		canvas.repaint();
 	}
@@ -196,8 +211,7 @@ public class DrawTextPanel extends JPanel  {
 			optionsMenu.add(colorItem);
 			JMenuItem bgColorItem = new JMenuItem("Set Background Color...");
 			bgColorItem.addActionListener(menuHandler);
-			optionsMenu.add(bgColorItem);
-			
+			optionsMenu.add(bgColorItem);		
 		}
 		return menuBar;
 	}
@@ -307,5 +321,11 @@ public class DrawTextPanel extends JPanel  {
 		return s;
 	}
 	
+	class MyMouseMotionListener extends MouseMotionAdapter {
+		
+	}
+	
 
 }
+
+
