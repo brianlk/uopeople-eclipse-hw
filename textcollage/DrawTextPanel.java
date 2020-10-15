@@ -231,13 +231,14 @@ public class DrawTextPanel extends JPanel  {
 				Scanner scanner = new Scanner(imageOpenSetting);
 				while (scanner.hasNextLine()) {
 					String line = scanner.nextLine();
-					System.out.println(line);
+					if (!line.contains("background")) {
+						theString.add(readImageSetting(line));	
+					}
 				}
 			} catch (Exception e) {
-				
+				JOptionPane.showMessageDialog(this, "Sorry, the file has problem.");
 			}
-			
-			JOptionPane.showMessageDialog(this, "Sorry, the Open command is not implemented.");
+//			JOptionPane.showMessageDialog(this, "Sorry, the Open command is not implemented.");
 			canvas.repaint(); // (you'll need this to make the new list of strings take effect)
 		}
 		else if (command.equals("Clear")) {  // remove all strings
@@ -286,6 +287,24 @@ public class DrawTextPanel extends JPanel  {
 						"Sorry, an error occurred while trying to save the image:\n" + e);
 			}
 		}
+		
+
+	}
+	
+	private DrawTextItem readImageSetting(String setting) {
+		String text = null;
+		int bkRed, bkGreen, bkBlue;
+		int x, y;
+		String[] arrOfStr = setting.split(":");
+		text = arrOfStr[0];
+		bkRed = Integer.parseInt(arrOfStr[1]);
+		bkGreen = Integer.parseInt(arrOfStr[2]);
+		bkBlue = Integer.parseInt(arrOfStr[3]);
+		x = Integer.parseInt(arrOfStr[4]);
+		y = Integer.parseInt(arrOfStr[5]);
+		DrawTextItem s = new DrawTextItem(text,x,y);
+		s.setTextColor(new Color(bkRed, bkGreen, bkBlue));
+		return s;
 	}
 	
 
