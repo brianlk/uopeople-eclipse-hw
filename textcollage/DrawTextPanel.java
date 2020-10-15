@@ -16,6 +16,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Scanner;
+
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JColorChooser;
@@ -224,7 +226,17 @@ public class DrawTextPanel extends JPanel  {
 			JOptionPane.showMessageDialog(this, "Save completed.");
 		}
 		else if (command.equals("Open...")) { // read a previously saved file, and reconstruct the list of strings
-			File imageSaveSetting = fileChooser.getOutputFile(this, "Select Image File Name", "textimage.txt");
+			try {
+				File imageOpenSetting = fileChooser.getInputFile(this, "Select Image File Name");
+				Scanner scanner = new Scanner(imageOpenSetting);
+				while (scanner.hasNextLine()) {
+					String line = scanner.nextLine();
+					System.out.println(line);
+				}
+			} catch (Exception e) {
+				
+			}
+			
 			JOptionPane.showMessageDialog(this, "Sorry, the Open command is not implemented.");
 			canvas.repaint(); // (you'll need this to make the new list of strings take effect)
 		}
