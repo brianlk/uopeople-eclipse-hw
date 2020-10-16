@@ -101,6 +101,7 @@ public class DrawTextPanel extends JPanel  {
 	 */
 	public DrawTextPanel() {
 		theString = new ArrayList<DrawTextItem>();
+
 		fileChooser = new SimpleFileChooser();
 		undoMenuItem = new JMenuItem("Remove Item");
 		undoMenuItem.setEnabled(false);
@@ -117,12 +118,14 @@ public class DrawTextPanel extends JPanel  {
 		add(bottom, BorderLayout.SOUTH);
 		canvas.addMouseListener( new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-				doMousePress( e );
+				if (checkIfPreviousStringExist(e)) {
+					System.out.println("You hit the previous string.");
+					canvas.repaint();
+				} else {
+					doMousePress( e );
+				}
 			}
 			
-		    public void mouseReleased(MouseEvent e) {
-//		    	System.out.println("x:" +e.getX() + "y:" + e.getY());
-		    }
 		} );
 		canvas.addMouseMotionListener(new MyMouseMotionListener(){
 			public void mouseDragged(MouseEvent e) {
@@ -159,9 +162,31 @@ public class DrawTextPanel extends JPanel  {
 		s.setBackground(Color.BLUE);  // Default is null, meaning don't draw a background area.
 //		s.setBackgroundTransparency(0.7);  // Default is 0, meaning background is not transparent.
 		theString.add(s);  // Set this string as the ONLY string to be drawn on the canvas!
-		currentItem = theString.get(theString.size() - 1);
+		currentItem = s;
 		undoMenuItem.setEnabled(true);
 		canvas.repaint();
+	}
+	
+	public boolean checkIfPreviousStringExist(MouseEvent e) {
+		System.out.println(theString.size());
+		for (DrawTextItem item :theString) {
+			int mouseX = e.getX();
+			int mouseY = e.getY();
+			int leftX = mouseX - 50;
+			int rightX =  mouseX + 50;
+			int topY = mouseY - 20;
+			int bottomY = mouseY + 20;
+			if ((item.getX() > leftX && item.getX() < rightX) && (item.getY() > topY && item.getY() < bottomY)) {
+				item.setX(mouseX);
+				item.setY(mouseY);
+				currentItem = item;
+				System.out.println("mouse click x: " + mouseX + "left x: " + leftX + "right x: " + rightX);
+				System.out.println("mouse click y: " + mouseX + "top y: " + topY + "bottom y: " + bottomY);
+				System.out.println(item.getString());
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**

@@ -17,7 +17,7 @@ import java.awt.Graphics2D;
  */
 public class DrawTextItem {
 	
-	private final String string;  // The String that is drawn by this item.
+	private String string;  // The String that is drawn by this item.
 	
 	private Font font = null;
 	private int x = 0;
@@ -107,6 +107,10 @@ public class DrawTextItem {
 	 */
 	public String getString() {
 		return string;
+	}
+	
+	public void setString(String x) {
+		string = x;
 	}
 
 	/**
