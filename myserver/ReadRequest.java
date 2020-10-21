@@ -158,7 +158,6 @@ public class ReadRequest {
 	}
 	
 	private static void sendFile(File requestFile, OutputStream socketOut) throws IOException {
-	    InputStream in = new BufferedInputStream(new FileInputStream(requestFile));
 //	    OutputStream out = new BufferedOutputStream(socketOut);
 		PrintWriter writerObj = new PrintWriter(socketOut);
 		writerObj.write("HTTP/1.1 200 OK\r\n");
@@ -167,6 +166,7 @@ public class ReadRequest {
 		writerObj.write("Content-Length: " + requestFile.length() +"\r\n");
 		writerObj.write("\r\n");
 		writerObj.flush();
+		InputStream in = new BufferedInputStream(new FileInputStream(requestFile));
 	    while (true) {
 	      int x = in.read(); // read one byte from file
 	      if (x < 0)
