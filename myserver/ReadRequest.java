@@ -124,14 +124,16 @@ public class ReadRequest {
 						// Send file requested file.
 						sendRequestFile(file, connection);
 					}	
-
 			} else if (!splittedArr[0].equals("GET")) {
-				sendErrorResponse(501, connection);
+//				sendErrorResponse(501, connection);
 			} else
 				System.out.println("Connection is not HTTP/1.1.");
 			
 		} catch (Exception e) {
-			
+			try {
+				sendErrorResponse(505, connection);
+			} catch(Exception ex) {
+			}
 		}
 	}
 	
@@ -177,30 +179,33 @@ public class ReadRequest {
 	}
 	
 	private static void sendErrorResponse(int errorCode, Socket socket) throws IOException {
-		String status;
+		String status, desc;
 		switch (errorCode) {
 		case 404:
 			status = "404 Not Found";
+			desc = "The resource that you requested does not exist on this server.";
 			break;
 		case 403:
 			status = "403 Forbidden";
+			desc = "you could send this if the requested file exists, but you don't have permission to read it.";
 			break;
 		case 400:
 			status = "400 Bad Request";
+			desc = "you could send this if the syntax of the request is bad, for example if the third token is not \"HTTP/1.1\" or \"HTTP/1.0\"";
 			break;
 		case 501:
 			status = "501 Not Implemented";
+			desc = "if the method in the request in anything other than \"GET\"";
 			break;
 		case 500:
 			status = "500 Internal Server Error";
+			desc = "you could send this if you catch some unexpected error in the handleConnection method.";
 			break;
 		default:
 			status = "";
+			desc = "";
 		}
-		String fileNotFound = "<html><head><title>Error</title></head><body>\r\n"
-				+ "<h2>Error: " + status +"</h2>\r\n"
-				+ "<p>The resource that you requested does not exist on this server.</p>\r\n"
-				+ "</body></html>";
+		String fileNotFound = "Error: " + status + "\n" + desc + "\n";
 		PrintWriter writerObj = new PrintWriter(socket.getOutputStream());
 		writerObj.write("HTTP/1.1 " + status + "\r\n");
 		writerObj.write("Connection: close\r\n");
