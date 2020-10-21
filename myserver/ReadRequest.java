@@ -35,6 +35,14 @@ public class ReadRequest {
 	public static void main(String[] args) {
 		ServerSocket serverSocket;
 		try {
+			/**
+			 * 
+    			Open a socket.
+    			Open an input stream and output stream to the socket.
+    			Read from and write to the stream according to the server's protocol.
+    			Close the streams.
+    			Close the socket.
+			 */
 			serverSocket = new ServerSocket(LISTENING_PORT);
 		}
 		catch (Exception e) {
@@ -80,7 +88,7 @@ public class ReadRequest {
 				String line = in.nextLine();
 				if (line.trim().length() == 0 || line.equals("quit"))
 					break;
-				handleLogic(line);
+				handleLogic(line, connection);
 			}
 		}
 		catch (Exception e) {
@@ -96,7 +104,7 @@ public class ReadRequest {
 		}
 	}
 	
-	private static void handleLogic(String line) {
+	private static void handleLogic(String line, Socket connection) {
 		String[] splittedArr = line.split("\\s+");
 		if (splittedArr[0].equals("GET") && splittedArr[1].length() > 0 && splittedArr[2].equals("HTTP/1.1")) {
 			String filename = splittedArr[1];
@@ -104,19 +112,19 @@ public class ReadRequest {
 			if (!file.exists())
 				System.out.println("File not found.");
 			else if (file.isDirectory())
-				sendFile(file);
+				sendRequestFile(file, connection);
 			else if (!file.canRead())
 				System.out.println("Failed to read the file.");
 			else if (!(file.length() > 0)) {
 				System.out.println("File length is 0.");
 			} else {
-				sendFile(file);
+				sendRequestFile(file, connection);
 			}
 		} else
 			System.out.println("Connection is not HTTP/1.1.");
 	}
 	
-	private static void sendFile(File file) {
+	private static void sendRequestFile(File file, Socket connection) {
 		File requestFile;
 		if (file.isDirectory()) {
 			requestFile = new File("/tmp/index.html");
@@ -127,7 +135,31 @@ public class ReadRequest {
 		} else {
 			requestFile = file;
 		}
-		System.out.println(requestFile.getName());
+		try {
+			sendFile(requestFile, connection.getOutputStream());
+		} catch (Exception e) {
+			System.out.println("Failed to send file: " + requestFile.getName());
+		}
+	}
+	
+	private static void sendFile(File requestFile, OutputStream socketOut) throws IOException {
+	    InputStream in = new BufferedInputStream(new FileInputStream(requestFile));
+//	    OutputStream out = new BufferedOutputStream(socketOut);
+		PrintWriter writerObj = new PrintWriter(socketOut);
+		writerObj.write("HTTP/1.1 200 OK\r\n");
+		writerObj.write("Connection: close\r\n");
+		writerObj.write("Content-Type: text/html\r\n");
+		writerObj.write("Content-Length: " + requestFile.length() +"\r\n");
+		writerObj.write("\r\n");
+		writerObj.flush();
+	    while (true) {
+	      int x = in.read(); // read one byte from file
+	      if (x < 0)
+	         break; // end of file reached
+	      socketOut.write(x);  // write the byte to the socket
+	    }
+	    in.close();
+	    socketOut.flush();
 	}
 
 }
