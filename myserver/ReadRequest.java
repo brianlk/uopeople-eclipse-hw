@@ -111,17 +111,20 @@ public class ReadRequest {
 			File file = new File("/tmp" + filename);
 			if (!file.exists())
 				try {
+					// Send file not found.
 					notFoundFile(connection);
 				} catch(Exception e) {
 					
 				}
 			else if (file.isDirectory()) {
+				// Send file default index.html
 				sendRequestFile(file, connection);
 			} else if (!file.canRead())
 				System.out.println("Failed to read the file.");
 			else if (!(file.length() > 0)) {
 				System.out.println("File length is 0.");
 			} else {
+				// Send file requested file.
 				sendRequestFile(file, connection);
 			}
 		} else
@@ -141,6 +144,7 @@ public class ReadRequest {
 		}
 	
 		try {
+			System.out.println("Sending file...");
 			sendFile(requestFile, connection.getOutputStream());
 		} catch (Exception e) {
 			System.out.println("Failed to send file: " + requestFile.getName());
@@ -165,6 +169,7 @@ public class ReadRequest {
 	    }
 	    in.close();
 	    socketOut.flush();
+	    System.out.println("Send file completed.");
 	}
 	
 	private static void notFoundFile(Socket socket) throws IOException {
