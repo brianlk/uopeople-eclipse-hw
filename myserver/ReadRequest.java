@@ -101,9 +101,33 @@ public class ReadRequest {
 		if (splittedArr[0].equals("GET") && splittedArr[1].length() > 0 && splittedArr[2].equals("HTTP/1.1")) {
 			String filename = splittedArr[1];
 			File file = new File("/tmp" + filename);
-			System.out.println(file.exists());
+			if (!file.exists())
+				System.out.println("File not found.");
+			else if (file.isDirectory())
+				sendFile(file);
+			else if (!file.canRead())
+				System.out.println("Failed to read the file.");
+			else if (!(file.length() > 0)) {
+				System.out.println("File length is 0.");
+			} else {
+				sendFile(file);
+			}
 		} else
 			System.out.println("Connection is not HTTP/1.1.");
+	}
+	
+	private static void sendFile(File file) {
+		File requestFile;
+		if (file.isDirectory()) {
+			requestFile = new File("/tmp/index.html");
+			if (!requestFile.exists()) {
+				System.out.println("File not found.");
+				return;
+			}
+		} else {
+			requestFile = file;
+		}
+		System.out.println(requestFile.getName());
 	}
 
 }
