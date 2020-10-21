@@ -110,10 +110,14 @@ public class ReadRequest {
 			String filename = splittedArr[1];
 			File file = new File("/tmp" + filename);
 			if (!file.exists())
-				System.out.println("File not found.");
-			else if (file.isDirectory())
+				try {
+					notFoundFile(connection);
+				} catch(Exception e) {
+					
+				}
+			else if (file.isDirectory()) {
 				sendRequestFile(file, connection);
-			else if (!file.canRead())
+			} else if (!file.canRead())
 				System.out.println("Failed to read the file.");
 			else if (!(file.length() > 0)) {
 				System.out.println("File length is 0.");
@@ -135,6 +139,7 @@ public class ReadRequest {
 		} else {
 			requestFile = file;
 		}
+	
 		try {
 			sendFile(requestFile, connection.getOutputStream());
 		} catch (Exception e) {
@@ -160,6 +165,18 @@ public class ReadRequest {
 	    }
 	    in.close();
 	    socketOut.flush();
+	}
+	
+	private static void notFoundFile(Socket socket) throws IOException {
+		String fileNotFound = "File not found.";
+		PrintWriter writerObj = new PrintWriter(socket.getOutputStream());
+		writerObj.write("HTTP/1.1 200 OK\r\n");
+		writerObj.write("Connection: close\r\n");
+		writerObj.write("Content-Type: text/html\r\n");
+		writerObj.write("Content-Length: " + fileNotFound.length() +"\r\n");
+		writerObj.write("\r\n");
+		writerObj.write(fileNotFound);
+		writerObj.flush();
 	}
 
 }
