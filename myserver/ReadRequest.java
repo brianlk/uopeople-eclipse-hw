@@ -106,29 +106,33 @@ public class ReadRequest {
 	
 	private static void handleLogic(String line, Socket connection) {
 		String[] splittedArr = line.split("\\s+");
-		if (splittedArr[0].equals("GET") && splittedArr[1].length() > 0 && splittedArr[2].equals("HTTP/1.1")) {
-			String filename = splittedArr[1];
-			File file = new File("/tmp" + filename);
-			if (!file.exists())
-				try {
-					// Send file not found.
-					notFoundFile(connection);
-				} catch(Exception e) {
-					
-				}
-			else if (file.isDirectory()) {
-				// Send file default index.html
-				sendRequestFile(file, connection);
-			} else if (!file.canRead())
-				System.out.println("Failed to read the file.");
-			else if (!(file.length() > 0)) {
-				System.out.println("File length is 0.");
-			} else {
-				// Send file requested file.
-				sendRequestFile(file, connection);
-			}
-		} else
-			System.out.println("Connection is not HTTP/1.1.");
+		try {
+			if (splittedArr[0].equals("GET") && splittedArr[1].length() > 0 && splittedArr[2].equals("HTTP/1.1")) {
+				String filename = splittedArr[1];
+				File file = new File("/tmp" + filename);
+					if (!file.exists())
+						// Send file not found.
+						sendErrorResponse(404, connection);
+					else if (file.isDirectory()) {
+						// Send file default index.html
+						sendRequestFile(file, connection);
+					} else if (!file.canRead())
+						sendErrorResponse(403, connection);
+					else if (!(file.length() > 0)) {
+						System.out.println("File length is 0.");
+					} else {
+						// Send file requested file.
+						sendRequestFile(file, connection);
+					}	
+
+			} else if (!splittedArr[0].equals("GET")) {
+				sendErrorResponse(501, connection);
+			} else
+				System.out.println("Connection is not HTTP/1.1.");
+			
+		} catch (Exception e) {
+			
+		}
 	}
 	
 	private static void sendRequestFile(File file, Socket connection) {
@@ -157,7 +161,7 @@ public class ReadRequest {
 		PrintWriter writerObj = new PrintWriter(socketOut);
 		writerObj.write("HTTP/1.1 200 OK\r\n");
 		writerObj.write("Connection: close\r\n");
-		writerObj.write("Content-Type: text/html\r\n");
+		writerObj.write("Content-Type: " + getMimeType(requestFile.getName()) + "\r\n");
 		writerObj.write("Content-Length: " + requestFile.length() +"\r\n");
 		writerObj.write("\r\n");
 		writerObj.flush();
@@ -172,16 +176,64 @@ public class ReadRequest {
 	    System.out.println("Send file completed.");
 	}
 	
-	private static void notFoundFile(Socket socket) throws IOException {
-		String fileNotFound = "File not found.";
+	private static void sendErrorResponse(int errorCode, Socket socket) throws IOException {
+		String status;
+		switch (errorCode) {
+		case 404:
+			status = "404 Not Found";
+			break;
+		case 403:
+			status = "403 Forbidden";
+			break;
+		case 400:
+			status = "400 Bad Request";
+			break;
+		case 501:
+			status = "501 Not Implemented";
+			break;
+		case 500:
+			status = "500 Internal Server Error";
+			break;
+		default:
+			status = "";
+		}
+		String fileNotFound = "<html><head><title>Error</title></head><body>\r\n"
+				+ "<h2>Error: " + status +"</h2>\r\n"
+				+ "<p>The resource that you requested does not exist on this server.</p>\r\n"
+				+ "</body></html>";
 		PrintWriter writerObj = new PrintWriter(socket.getOutputStream());
-		writerObj.write("HTTP/1.1 200 OK\r\n");
+		writerObj.write("HTTP/1.1 " + status + "\r\n");
 		writerObj.write("Connection: close\r\n");
-		writerObj.write("Content-Type: text/html\r\n");
-		writerObj.write("Content-Length: " + fileNotFound.length() +"\r\n");
+		writerObj.write("Content-Type: text/plain\r\n");
 		writerObj.write("\r\n");
 		writerObj.write(fileNotFound);
 		writerObj.flush();
 	}
+	
+	private static String getMimeType(String fileName) {
+        int pos = fileName.lastIndexOf('.');
+        if (pos < 0)  // no file extension in name
+            return "x-application/x-unknown";
+        String ext = fileName.substring(pos+1).toLowerCase();
+        if (ext.equals("txt")) return "text/plain";
+        else if (ext.equals("html")) return "text/html";
+        else if (ext.equals("htm")) return "text/html";
+        else if (ext.equals("css")) return "text/css";
+        else if (ext.equals("js")) return "text/javascript";
+        else if (ext.equals("java")) return "text/x-java";
+        else if (ext.equals("jpeg")) return "image/jpeg";
+        else if (ext.equals("jpg")) return "image/jpeg";
+        else if (ext.equals("png")) return "image/png";
+        else if (ext.equals("gif")) return "image/gif";
+        else if (ext.equals("ico")) return "image/x-icon";
+        else if (ext.equals("class")) return "application/java-vm";
+        else if (ext.equals("jar")) return "application/java-archive";
+        else if (ext.equals("zip")) return "application/zip";
+        else if (ext.equals("xml")) return "application/xml";
+        else if (ext.equals("xhtml")) return"application/xhtml+xml";
+        else return "x-application/x-unknown";
+           // Note:  x-application/x-unknown  is something made up;
+           // it will probably make the browser offer to save the file.
+     }
 
 }
