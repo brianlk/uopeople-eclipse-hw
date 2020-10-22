@@ -19,6 +19,16 @@ import java.io.*;
  */
 public class ReadRequest {
 	
+	private static class ConnectionThread extends Thread {
+	    Socket connection;
+	    ConnectionThread(Socket connection) {
+	       this.connection = connection;
+	    }
+	    public void run() {
+	       handleConnection(connection);
+	    }
+	 }
+	
 	/**
 	 * The server listens on this port.  Note that the port number must
 	 * be greater than 1024 and lest than 65535.
@@ -55,7 +65,9 @@ public class ReadRequest {
 				Socket connection = serverSocket.accept();
 				System.out.println("\nConnection from " 
 						+ connection.getRemoteSocketAddress());
-				handleConnection(connection);
+//				handleConnection(connection);
+				ConnectionThread thread = new ConnectionThread(connection);
+				thread.start();
 			}
 		}
 		catch (Exception e) {
