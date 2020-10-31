@@ -34,6 +34,7 @@ public class ReadRequest {
 	 * be greater than 1024 and lest than 65535.
 	 */
 	private final static int LISTENING_PORT = 50505;
+	final static String ROOTDIR = "/tmp";
 	
 	/**
 	 * Main program opens a server socket and listens for connection
@@ -121,7 +122,7 @@ public class ReadRequest {
 		try {
 			if (splittedArr[0].equals("GET") && splittedArr[1].length() > 0 && splittedArr[2].equals("HTTP/1.1")) {
 				String filename = splittedArr[1];
-				File file = new File("/tmp" + filename);
+				File file = new File(ROOTDIR + filename);
 					if (!file.exists())
 						// Send file not found.
 						sendErrorResponse(404, connection);
@@ -152,7 +153,7 @@ public class ReadRequest {
 	private static void sendRequestFile(File file, Socket connection) {
 		File requestFile;
 		if (file.isDirectory()) {
-			requestFile = new File("/tmp/index.html");
+			requestFile = new File(ROOTDIR+"/index.html");
 			if (!requestFile.exists()) {
 				System.out.println("File not found.");
 				return;
