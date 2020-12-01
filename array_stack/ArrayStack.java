@@ -1,10 +1,10 @@
 package array_stack;
 
-public class ArrayStack<ch> implements Stack<ch> {
+public class ArrayStack<E> implements Stack<E> {
 	private static final int defaultSize = 10;
 	private int maxSize;
 	private int top;
-	private ch[] listArray;
+	private E[] listArray;
 	
 	ArrayStack() {
 		this(defaultSize);
@@ -12,19 +12,19 @@ public class ArrayStack<ch> implements Stack<ch> {
 	ArrayStack(int size) {
 		maxSize = size;
 		top = 0;
-		listArray = (ch[]) new Object[size];
+		listArray = (E[]) new Object[size];
 	}
 	public void clear() {
 		top = 0;
 	}
-	public void push(ch it) {
+	public void push(E it) {
 		assert top != maxSize : "Stack is full";
 		listArray[top++] = it;
 	}
-	public ch pop() {
+	public E pop() {
 		return listArray[--top];
 	}
-	public ch topValue() {
+	public E topValue() {
 		return listArray[top-1];
 	}
 	public int length() {
@@ -32,9 +32,10 @@ public class ArrayStack<ch> implements Stack<ch> {
 	}
 	
 	public static void main(String[] args) {
+		char o;
 		ArrayStack x = new ArrayStack();
 		x.push('a');
-		System.out.println(x.length());
-		System.out.println(x.pop());
+		o = (char)x.pop();
+		System.out.println(o);
 	}
 }
