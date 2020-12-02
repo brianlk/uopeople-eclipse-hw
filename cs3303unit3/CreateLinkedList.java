@@ -1,43 +1,24 @@
 package cs3303unit3;
 
 public class CreateLinkedList {
+	public static int[] intArray = new int[] {2, 1, 0};
+	public static Node top = null;
+	public static Node current;
+	
+	
 	public static void main(String[] args) {
-		Node plink = null;
-		Node link = null;
+		top = new Node();
+		top.value = -1;
 	    // root will be the beginning of the linked list
-		int[] intArray = new int[] {2, 1, 0};
+		
 		
 		for (int i=0; i < intArray.length; i++) {
-//			System.out.println(intArray[i]);
-			if (i == 0) {
-				Node root = new Node(intArray[i]);
-				plink = root;
-			} else {
-				link = new Node(intArray[i]);
-				link.ptr = plink;
-				plink = link;
-			}
+			push(intArray[i]);
 		}
-//		Node root = new Node(5);
-//	    // each additional node will link to preceeding one
-//		link = new Node(1);
-//	    link.ptr = root;
-//	    plink = link;
-//
-//	    link = new Node(8);
-//	    link.ptr = plink;
-//	    plink = link;
-//
-//	    link = new Node(6);
-//	    link.ptr = plink;
-//	    plink = link;
-//
-//	    link = new Node(3);
-//	    link.ptr = plink;
-//	    plink = link;
-	   
+		pop();
+		pop();
 	    // Move through the list and print out each value
-	    printList(link);
+	    printList(top);
 	}
 
 	public static void printList(Node node) {
@@ -45,5 +26,23 @@ public class CreateLinkedList {
 		  System.out.println(" Value: " + node.value);
 		  printList(node.ptr);
 	   }
+	}
+	
+	public static void push(int i) {
+		if (top.ptr == null && top.value < 0) {
+			Node root = new Node(i);
+			current = root;
+			top.ptr = current;
+		} else {
+			Node root = new Node(i);
+			top.ptr = root;
+			root.ptr = current;
+			current = root;
+		}
+	}
+	
+	public static void pop() {
+		current = top.ptr;
+		top.ptr = current.ptr;
 	}
 }
