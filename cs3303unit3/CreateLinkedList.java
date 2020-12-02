@@ -8,17 +8,16 @@ public class CreateLinkedList {
 	
 	public static void main(String[] args) {
 		top = new Node();
-		top.value = -1;
-	    // root will be the beginning of the linked list
-		
-		
+		top.value = -1; // Define the top node	
 		for (int i=0; i < intArray.length; i++) {
-			push(intArray[i]);
+			push(intArray[i]); // push the element into the stack with top
 		}
-		pop();
-		pop();
+
+		pop(); // first pop
+		pop(); // second pop
+		pop(); // third pop
 	    // Move through the list and print out each value
-	    printList(top);
+//	    printList(top);
 	}
 
 	public static void printList(Node node) {
@@ -43,6 +42,7 @@ public class CreateLinkedList {
 	
 	public static void pop() {
 		current = top.ptr;
+		System.out.println("pop value: " + current.value);
 		top.ptr = current.ptr;
 	}
 }
