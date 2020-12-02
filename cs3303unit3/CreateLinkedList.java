@@ -13,9 +13,9 @@ public class CreateLinkedList {
 			push(intArray[i]); // push the element into the stack with top
 		}
 
-		pop(); // first pop
-		pop(); // second pop
-		pop(); // third pop
+		pop("first"); // first pop
+		pop("second"); // second pop
+		pop("third"); // third pop
 	    // Move through the list and print out each value
 //	    printList(top);
 	}
@@ -40,9 +40,9 @@ public class CreateLinkedList {
 		}
 	}
 	
-	public static void pop() {
+	public static void pop(String count) {
 		current = top.ptr;
-		System.out.println("pop value: " + current.value);
+		System.out.println(count + " pop value: " + current.value);
 		top.ptr = current.ptr;
 	}
 }
