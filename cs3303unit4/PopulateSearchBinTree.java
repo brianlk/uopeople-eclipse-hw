@@ -49,12 +49,10 @@ public class PopulateSearchBinTree {
 		Scanner in = new Scanner(System.in);
 		String input = in.nextLine();
 		String[] inputArr = input.replaceAll("\\s+", "").split(",");
-		for (int i=0; i < inputArr.length - 1; i++) {
+		for (int i=0; i < inputArr.length; i++) {
 			int x = Integer.parseInt(inputArr[i]);
 			tree.insert(tree.root, x);
 		}
-		System.out.println(tree.root.left.value);
-        
 	}
 
 }
