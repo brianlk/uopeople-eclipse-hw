@@ -15,6 +15,9 @@ public class PopulateSearchBinTree {
 	
 	// Declare the root
 	Node root;
+	int searchValue;
+	int count = 0;
+	boolean found = false;
 	
 	PopulateSearchBinTree() {
 		root = null;
@@ -42,6 +45,15 @@ public class PopulateSearchBinTree {
 		
 	}
 	
+	Node search(Node root, int key) {
+		count++;
+		if (root == null || root.value == key)
+			return root;
+		if (root.value > key)
+			return search(root.left, key);
+		return search(root.right, key);
+	}
+	
 	public static void main(String[] args) {
 		PopulateSearchBinTree tree = new PopulateSearchBinTree();
 		int checkInput = 0;
@@ -53,6 +65,8 @@ public class PopulateSearchBinTree {
 			int x = Integer.parseInt(inputArr[i]);
 			tree.insert(tree.root, x);
 		}
+		tree.search(tree.root, 50);
+		System.out.println(tree.count);
 	}
 
 }
