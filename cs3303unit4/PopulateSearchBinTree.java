@@ -17,5 +17,11 @@ public class PopulateSearchBinTree {
 	PopulateSearchBinTree() {
 		root = null;
 	}
+	
+	void insert(int key) {
+		if (root == null) {
+			root = new Node(key);
+		}
+	}
 
 }
