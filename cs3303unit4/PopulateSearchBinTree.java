@@ -1,5 +1,7 @@
 package cs3303unit4;
 
+import java.util.*;
+
 public class PopulateSearchBinTree {
 	// Declare the node class
 	class Node {
@@ -20,7 +22,7 @@ public class PopulateSearchBinTree {
 	
 	void insert(Node node, int key) {
 		if (root == null) {
-			root = new Node(50);
+			root = new Node(key);
 			return;
 		}
 		if (key < node.value) {
@@ -42,13 +44,17 @@ public class PopulateSearchBinTree {
 	
 	public static void main(String[] args) {
 		PopulateSearchBinTree tree = new PopulateSearchBinTree();
-		tree.insert(tree.root, 50);
-		tree.insert(tree.root, 40);
-		tree.insert(tree.root, 60);
-		tree.insert(tree.root, 10);
-		tree.insert(tree.root, 81);
-		tree.insert(tree.root, 71);
-		System.out.println(tree.root.right.right.left.value);
+		int checkInput = 0;
+		System.out.print("Integers to add to binary search tree: ");
+		Scanner in = new Scanner(System.in);
+		String input = in.nextLine();
+		String[] inputArr = input.replaceAll("\\s+", "").split(",");
+		for (int i=0; i < inputArr.length - 1; i++) {
+			int x = Integer.parseInt(inputArr[i]);
+			tree.insert(tree.root, x);
+		}
+		System.out.println(tree.root.left.value);
+        
 	}
 
 }
