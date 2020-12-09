@@ -47,8 +47,10 @@ public class PopulateSearchBinTree {
 	
 	Node search(Node root, int key) {
 		count++;
-		if (root == null || root.value == key)
-			return root;
+		if (root == null || root.value == key) {
+			System.out.println("Found: " + key);
+			return root;	
+		}
 		if (root.value > key)
 			return search(root.left, key);
 		return search(root.right, key);
@@ -56,7 +58,6 @@ public class PopulateSearchBinTree {
 	
 	public static void main(String[] args) {
 		PopulateSearchBinTree tree = new PopulateSearchBinTree();
-		int checkInput = 0;
 		System.out.print("Integers to add to binary search tree: ");
 		Scanner in = new Scanner(System.in);
 		String input = in.nextLine();
@@ -65,8 +66,11 @@ public class PopulateSearchBinTree {
 			int x = Integer.parseInt(inputArr[i]);
 			tree.insert(tree.root, x);
 		}
-		tree.search(tree.root, 50);
-		System.out.println(tree.count);
+		System.out.println("Search an integer: ");
+		int num = in.nextInt();
+		tree.search(tree.root, num);
+		in.close();
+		System.out.print("Count: " + tree.count);
 	}
 
 }
