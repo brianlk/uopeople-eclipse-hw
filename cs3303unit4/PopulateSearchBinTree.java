@@ -49,8 +49,11 @@ public class PopulateSearchBinTree {
 	
 	Node search(Node root, int key) {
 		count++;
-		if (root == null || root.value == key) {
+		if (root == null)
+			return null;
+		if (root.value == key) {
 			System.out.println("Found: " + key);
+			found = true;
 			return root;	
 		}
 		if (root.value > key)
@@ -72,7 +75,10 @@ public class PopulateSearchBinTree {
 		int num = in.nextInt();
 		tree.search(tree.root, num);
 		in.close();
-		System.out.print("Count: " + tree.count);
+		if (tree.found == true)
+			System.out.print("Count: " + tree.count);
+		else
+			System.out.print("The value is not found");
 	}
 
 }
