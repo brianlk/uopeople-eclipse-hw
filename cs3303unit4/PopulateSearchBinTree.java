@@ -70,13 +70,13 @@ public class PopulateSearchBinTree {
 			System.out.println("insert integer: " + inputArr[i]);
 			tree.insert(tree.root, inputArr[i]);
 		}
-		System.out.println("Search an integer: ");
+		System.out.println("Input and Search an integer: ");
 		Scanner in = new Scanner(System.in);
 		int num = in.nextInt();
 		tree.search(tree.root, num);
 		in.close();
 		if (tree.found == true)
-			System.out.print("Count: " + tree.count);
+			System.out.print("Traverse node count: " + tree.count);
 		else
 			System.out.print("The value is not found");
 	}
