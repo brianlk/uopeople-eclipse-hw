@@ -10,8 +10,8 @@ public class quickSort {
 			return;
 		
 		int pivot = array[end];
-		int left = -1;
-		int right = -1;
+		int left = -1; // define the left pointer
+		int right = -1; // define the right pointer 
 		int i = start;
 		int j = end - 1;
 
@@ -19,15 +19,15 @@ public class quickSort {
 			if (array[i] > pivot) {
 				left = i;
 			} else {
-				i++;
+				i++;  // left pointer moves to right if value is smaller than pivot
 			}
 			if (array[j] < pivot) {
 				right = j;
 			} else {
-				j--;
+				j--;  // right pointer moves to left if value is bigger than pivot 
 			}
 			if (left != -1 && right != -1) {
-				swap(array, left, right);
+				swap(array, left, right); // swap the values if the left and right pointers are found
 				left = -1;
 				right = -1;
 				i++;
@@ -35,7 +35,7 @@ public class quickSort {
 			}
 		}
 		swap(array, i, end);
-
+		// recursive run the left and right partitons
 		qSort(array, start, i-1); 
         qSort(array, i+1, end); 
 	}
